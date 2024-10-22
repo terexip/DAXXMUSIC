@@ -1,0 +1,30 @@
+name: Deploy Telegram Bot
+
+on:
+  push:
+    branches:
+      - main  # الفرع الذي تريد تشغيل workflow عليه
+
+jobs:
+  run-bot:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.9'  # استخدم النسخة المطلوبة من بايثون
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+
+    - name: Run bot
+      env:
+        BOT_TOKEN: ${{ secrets.BOT_TOKEN }}  # استخدام السر لتوكن البوت
+      run: |
+        nohup python bot.py &
